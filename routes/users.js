@@ -5,7 +5,8 @@ let userController = require('../controllers/users')
 let { CreateSuccessResponse, CreateErrorResponse } = require('../utils/responseHandler')
 let{check_authentication,check_authorization} = require('../utils/check_auth');
 const constants = require('../utils/constants');
-let {PostValidation,PutValidation,validate} = require('../utils/validator')
+const { validate } = require('../schemas/user');
+const { UpdateUserValidator, CreateUserValidator } = require('../utils/validator');
 
 /* GET users listing. */
 
@@ -14,7 +15,7 @@ router.get('/',check_authentication,check_authorization(constants.MOD_PERMISSION
   let users = await userController.GetAllUser();
   CreateSuccessResponse(res, 200, users)
 });
-router.post('/', PostValidation, validate, async function (req, res, next) {
+router.post('/', CreateUserValidator, validate, async function (req, res, next) {
   try {
     let body = req.body;
     let newUser = await userController.CreateAnUser(body.username, body.password, body.email, body.role);
@@ -23,7 +24,7 @@ router.post('/', PostValidation, validate, async function (req, res, next) {
     CreateErrorResponse(res, 404, error.message)
   }
 });
-router.put('/:id', PutValidation, validate, async function (req, res, next) {
+router.put('/:id',UpdateUserValidator, validate, async function (req, res, next) {
   try {
     let body = req.body;
     let updatedResult = await userController.UpdateAnUser(req.params.id, body);

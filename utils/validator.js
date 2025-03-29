@@ -23,10 +23,13 @@ module.exports = {
         } else {
             next();
         }
+        this.CreateUserValidator,
+        this.UpdateUserValidator,
         this.ForgotPasswordValidator,
+        this.ResetPasswordValidator,
         this.ChangePasswordValidator,
-        this.PostValidation,
-        this.PutValidation
+        this.SignUpValidator,
+        this.LoginValidator
     },
     SignUpValidator: [
         body("username").isLength(options.username).withMessage(util.format(constants.VALIDATOR_ERROR_USERNAME,options.username.minLength)),
@@ -43,7 +46,7 @@ module.exports = {
         body("password").isStrongPassword(options.password).withMessage("username hoac password sai")
     ],
     ChangePasswordValidator: [
-        body("oldpassword").notEmpty().withMessage(constants.VALIDATOR_ERROR_OLD_PASSWORD),
+        body("oldpassword").notEmpty().withMessage("Can nhap mat khau cu"),
         body("newpassword").isStrongPassword(options.password).withMessage(util.format(constants.VALIDATOR_ERROR_PASSWORD,
             options.password.minLength,
             options.password.minLowercase,
@@ -52,9 +55,17 @@ module.exports = {
             options.password.minSymbols))
     ],
     ForgotPasswordValidator: [
-        body("email").isEmail().withMessage(constants.VALIDATOR_ERROR_EMAIL)
+        body("email").isEmail().withMessage("email nay khong ton tai")
     ],
-    PostValidation: [
+    ResetPasswordValidator: [
+        body("password").isStrongPassword(options.password).withMessage(util.format(constants.VALIDATOR_ERROR_PASSWORD,
+            options.password.minLength,
+            options.password.minLowercase,
+            options.password.minUppercase,
+            options.password.minNumbers,
+            options.password.minSymbols))
+    ],
+    CreateUserValidator: [
         body("username").isLength(options.username).withMessage(util.format(constants.VALIDATOR_ERROR_USERNAME, options.username.minLength)),
         body("password").isStrongPassword(options.password).withMessage(util.format(constants.VALIDATOR_ERROR_PASSWORD,
             options.password.minLength,
@@ -62,10 +73,9 @@ module.exports = {
             options.password.minUppercase,
             options.password.minNumbers,
             options.password.minSymbols)),
-        body("email").isEmail().withMessage(constants.VALIDATOR_ERROR_EMAIL),
-        body("role").notEmpty().withMessage(constants.VALIDATOR_ERROR_ROLE)
+        body("email").isEmail().withMessage(constants.VALIDATOR_ERROR_EMAIL)
     ],
-    PutValidation: [
+    UpdateUserValidator: [
         body("username").optional().isLength(options.username).withMessage(util.format(constants.VALIDATOR_ERROR_USERNAME, options.username.minLength)),
         body("password").optional().isStrongPassword(options.password).withMessage(util.format(constants.VALIDATOR_ERROR_PASSWORD,
             options.password.minLength,
@@ -73,8 +83,7 @@ module.exports = {
             options.password.minUppercase,
             options.password.minNumbers,
             options.password.minSymbols)),
-        body("email").optional().isEmail().withMessage(constants.VALIDATOR_ERROR_EMAIL),
-        body("role").optional().notEmpty().withMessage(constants.VALIDATOR_ERROR_ROLE)
+        body("email").optional().isEmail().withMessage(constants.VALIDATOR_ERROR_EMAIL)
     ]
 }
 // multer
